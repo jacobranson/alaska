@@ -30,5 +30,8 @@
     snowfall = {
       namespace = "alaska";
     };
+    channels-config = {
+      allowUnfree = true;
+    };
   };
 }
