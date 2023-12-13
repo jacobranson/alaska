@@ -10,4 +10,8 @@
     userEmail = "code@jacobranson.dev";
     extraConfig.init.defaultBranch = "main";
   };
+
+  alaska.programs.helix = {
+    enable = true;
+  };
 }
