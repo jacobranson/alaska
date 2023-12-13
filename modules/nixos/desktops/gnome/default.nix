@@ -16,6 +16,7 @@ in {
     services.xserver.desktopManager.gnome.enable = true;
     services.xserver.displayManager.gdm.enable = true;
     services.xserver.excludePackages = [ pkgs.xterm ];
+    services.switcherooControl.enable = true;
 
     environment.gnome.excludePackages = with pkgs; with pkgs.gnome; with pkgs.gnomeExtensions; [
       # replaced apps
