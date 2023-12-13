@@ -1,0 +1,73 @@
+_default:
+  @just --justfile /etc/justfile --list --unsorted
+
+# Switches to the latest NixOS configuration.
+switch-system:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  IFS=$'\n\t'
+
+  sudo nixos-rebuild switch --flake /home/jacob/.config/nixos
+
+# Updates the NixOS flake lock file and switches to the new configuration.
+update-system:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  IFS=$'\n\t'
+
+  nix flake update --commit-lock-file
+  sudo nixos-rebuild switch --flake /home/jacob/.config/nixos
+
+# Removes unused Nix packages and old boot loader entries.
+clean-system:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  IFS=$'\n\t'
+
+  sudo /run/current-system/sw/bin/nix-collect-garbage --delete-old
+  sudo /run/current-system/bin/switch-to-configuration boot
+
+# Reboots the system immediately.
+reboot-system:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  IFS=$'\n\t'
+
+  sudo reboot now  
+
+# Shows all fonts currently installed.
+show-fonts:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  IFS=$'\n\t'
+
+  fc-list : family | sort | uniq | "$PAGER"
+
+# Shows all .desktop files from installed Nix and Flatpak apps.
+show-desktop-files:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  IFS=$'\n\t'
+
+  sudo ls -A1 \
+    /run/current-system/sw/share/applications/*.desktop \
+    /var/lib/flatpak/app/*/current/active/files/share/applications/*.desktop \
+  | while read path; do
+      basename "$path"
+    done | "$PAGER" || true
+
+# Shows all GNOME extensions currently installed.
+show-gnome-extensions:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  IFS=$'\n\t'
+
+  gnome-extensions list | "$PAGER"
+
+# Watch for changes made to the dconf database.
+watch-dconf:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  IFS=$'\n\t'
+
+  dconf watch /
