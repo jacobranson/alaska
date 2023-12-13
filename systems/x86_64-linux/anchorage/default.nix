@@ -85,12 +85,7 @@
   };
 
   # enable the GNOME desktop environment
-  services.xserver = {
-    enable = true;
-    libinput.enable = true;
-    desktopManager.gnome.enable = true;
-    displayManager.gdm.enable = true;
-  };
+  alaska.desktops.gnome.enable = true;
 
   # enable the Just command runner
   alaska.features.just.enable = true;
