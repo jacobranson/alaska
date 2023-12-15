@@ -1,16 +1,24 @@
 _default:
   @just --justfile /etc/justfile --list --unsorted
 
-# Switches to the latest NixOS configuration.
-switch-system:
+# Shows all available NixOS generations.
+show-generations:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  IFS=$'\n\t'
+
+  sudo nix-env --list-generations --profile /nix/var/nix/profiles/system
+
+# Switches to the latest NixOS generation.
+switch-generation:
   #!/usr/bin/env bash
   set -euo pipefail
   IFS=$'\n\t'
 
   sudo nixos-rebuild switch --flake /home/jacob/.config/nixos
 
-# Updates the NixOS flake lock file and switches to the new configuration.
-update-system:
+# Updates the NixOS flake.lock file and switches to the latest NixOS generation.
+update-generation:
   #!/usr/bin/env bash
   set -euo pipefail
   IFS=$'\n\t'
@@ -18,14 +26,32 @@ update-system:
   nix flake update --commit-lock-file
   sudo nixos-rebuild switch --flake /home/jacob/.config/nixos
 
-# Removes unused Nix packages and old boot loader entries.
-clean-system:
+# Removes the NixOS generations matching the provided target. (Ex: 29, 5d, old)
+remove-generations target:
   #!/usr/bin/env bash
   set -euo pipefail
   IFS=$'\n\t'
 
-  sudo /run/current-system/sw/bin/nix-collect-garbage --delete-old
-  sudo /run/current-system/bin/switch-to-configuration boot
+  # if target is "old", delete all generations except the current one
+  if [[ "{{target}}" == "old" ]]; then
+    sudo /run/current-system/sw/bin/nix-collect-garbage --delete-old
+
+  # if target otherwise ends with "d", delete by period
+  elif [[ "{{target}}" == *d ]]; then
+    sudo /run/current-system/sw/bin/nix-collect-garbage --delete-older-than "{{target}}"
+
+  # if target is a number, delete by generation number
+  elif [[ "{{target}}" =~ ^[0-9]+$ ]]; then
+    sudo nix-env --delete-generations --profile /nix/var/nix/profiles/system "{{target}}"
+
+  # if target is anything else, fail with an error message.
+  else
+    >&2 echo "Invalid target specified"
+    exit 1
+  fi
+
+  # cleanup old boot loader entries
+  sudo /run/current-system/bin/switch-to-configuration switch
 
 # Reboots the system immediately.
 reboot-system:
@@ -33,7 +59,7 @@ reboot-system:
   set -euo pipefail
   IFS=$'\n\t'
 
-  sudo reboot now  
+  sudo reboot now
 
 # Shows all fonts currently installed.
 show-fonts:
