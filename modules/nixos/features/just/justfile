@@ -89,12 +89,10 @@ show-desktop-files:
   set -euo pipefail
   IFS=$'\n\t'
 
-  sudo ls -A1 \
+  sudo ls -A1 2> /dev/null \
     /run/current-system/sw/share/applications/*.desktop \
     /var/lib/flatpak/app/*/current/active/files/share/applications/*.desktop \
-  | while read path; do
-      basename "$path"
-    done | "$PAGER" || true
+  | while read path; do basename "$path"; done | "$PAGER" || true
 
 # Shows all GNOME extensions currently installed.
 show-gnome-extensions:
