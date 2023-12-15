@@ -3,9 +3,7 @@
 {
   imports = [ inputs.disko.nixosModules.disko ];
 
-  fileSystems."/nix".neededForBoot = true;
   fileSystems."/persist".neededForBoot = true;
-  fileSystems."/swap".neededForBoot = true;
   
   disko.devices = {
     nodev."/" = {
