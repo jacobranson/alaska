@@ -25,10 +25,11 @@ in {
     ];
 
     environment.systemPackages = with pkgs; [
-        virt-manager
         looking-glass-client
         pciutils
     ];
+
+    programs.virt-manager.enable = true;
 
     virtualisation = {
        libvirtd = {
@@ -51,5 +52,12 @@ in {
     };
 
     users.users.${cfg.user}.extraGroups = [ "qemu-libvirtd" "libvirtd" "disk" ];
+
+    alaska.features.persistence.persist.virtualization = {
+      user.directories = [
+        ".config/libvirt"
+        ".local/share/libvirt"
+      ];
+    };
   };
 }
