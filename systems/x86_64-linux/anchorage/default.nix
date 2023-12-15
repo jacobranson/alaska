@@ -1,9 +1,11 @@
 { inputs, pkgs, system, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix
-              ./disk-configuration.nix
-              ./user-configuration.nix ];
+  imports = [
+    ./hardware-configuration.nix
+    ./disk-configuration.nix
+    ./user-configuration.nix
+  ];
 
   # ensure the system can boot
   boot.loader.systemd-boot.enable = true;
@@ -16,13 +18,16 @@
   networking.hostName = "anchorage";
   networking.networkmanager.enable = true;
   
+  # assign a unique machine id
+  environment.etc."machine-id".text = "fe9c6a3393894b9b85db659c7d41b51a";
+
   # configure the keyboard layout; ex: us
   services.xserver.xkb.layout = "us";
   console.keyMap = "us";
 
   # set the locale and timezone
   i18n.defaultLocale = "en_US.UTF-8"; # ex: en_US.UTF-8
-  time.timeZone = "America/New_York";    # ex: America/New_York
+  time.timeZone = "America/New_York"; # ex: America/New_York
 
   # configure standard fonts
   fonts = {
@@ -64,19 +69,31 @@
   # configure our persistence module to persist core files and directories
   alaska.features.persistence.enable = true;
   alaska.features.persistence.persist.core = {
-    files = [];
-
     directories = [
-      "/etc/NetworkManager/system-connections"
+      "/var/log"
       "/var/lib/bluetooth"
+      "/var/lib/nixos"
+      "/var/lib/systemd/coredump"
+      "/etc/NetworkManager/system-connections"
+      { directory = "/var/lib/colord"; user = "colord"; group = "colord"; mode = "u=rwx,g=rx,o="; }
+    ];
+    files = [
+      { file = "/etc/nix/id_rsa"; parentDirectory = { mode = "u=rwx,g=,o="; }; }
     ];
 
     users.directories = [
-      "Desktop" "Documents" "Downloads"
-      "Music" "Pictures" "Projects"
-      "Public" "Templates" "Videos"
+      "Desktop"
+      "Documents"
+      "Downloads"
+      "Music"
+      "Pictures"
+      "Projects"
+      "Public"
+      "Templates"
+      "Videos"
       { directory = ".ssh"; mode = "0700"; }
-      ".config/nixos" ".config/gh"
+      ".config/nixos"
+      ".config/gh"
     ];
 
     users.files = [
