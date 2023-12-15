@@ -63,12 +63,11 @@ reboot-system:
 
 # Shows all IOMMU devices.
 show-iommu:
-  #! /usr/bin/env nix-shell
-  #! nix-shell -i bash -p pciutils
+  #! /usr/bin/env bash
   set -euo pipefail
   IFS=$'\n\t'
-  shopt -s nullglob
 
+  shopt -s nullglob
   for d in /sys/kernel/iommu_groups/*/devices/*; do
       n=${d#*/iommu_groups/*}; n=${n%%/*}
       printf 'IOMMU Group %s ' "$n"
