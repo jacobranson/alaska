@@ -81,6 +81,7 @@
 
     users.files = [
       ".bash_history"
+      ".config/monitors.xml"
     ];
   };
 
