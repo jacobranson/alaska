@@ -6,7 +6,6 @@
   fileSystems."/nix".neededForBoot = true;
   fileSystems."/persist".neededForBoot = true;
   fileSystems."/swap".neededForBoot = true;
-  fileSystems."/etc/ssh".neededForBoot = true;
   
   disko.devices = {
     nodev."/" = {
@@ -45,10 +44,6 @@
                    mountpoint = "/swap";
                    mountOptions = [ "compress=zstd" "noatime" ];
                    swap.swapfile.size = "8G";
-                 };
-                 "/etc_ssh" = {
-                   mountpoint = "/etc/ssh";
-                   mountOptions = [ "compress=zstd" "noatime" ];
                  };
               };
             };

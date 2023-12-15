@@ -14,11 +14,24 @@
   # ensure the system can be accessed remotely via ssh
   services.openssh.enable = true;
 
+  # configure the ssh host keys (for impermanence)
+  services.openssh.hostKeys = [
+    {
+      bits = 4096;
+      path = "/persist/etc/ssh/ssh_host_rsa_key";
+      type = "rsa";
+    }
+    {
+      path = "/persist/etc/ssh/ssh_host_ed25519_key";
+      type = "ed25519";
+    }
+  ];
+
   # ensure the system can connect to the internet
   networking.hostName = "anchorage";
   networking.networkmanager.enable = true;
   
-  # assign a unique machine id
+  # assign a unique machine id (for impermanence)
   environment.etc."machine-id".text = "fe9c6a3393894b9b85db659c7d41b51a";
 
   # configure the keyboard layout; ex: us
