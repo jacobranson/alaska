@@ -2,7 +2,7 @@
 
 let
   users = {
-    root.password = config.age.secrets.password.path;
+    root.hashedPasswordFile = config.age.secrets.password.path;
     "jacob" = {
       isNormalUser = true;
       hashedPasswordFile = config.age.secrets.password.path;
