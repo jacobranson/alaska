@@ -54,7 +54,7 @@ in {
     users.users.${cfg.user}.extraGroups = [ "qemu-libvirtd" "libvirtd" "disk" ];
 
     alaska.features.persistence.persist.virtualization = {
-      user.directories = [
+      users.directories = [
         ".config/libvirt"
         ".local/share/libvirt"
       ];
