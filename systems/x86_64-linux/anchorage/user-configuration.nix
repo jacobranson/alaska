@@ -4,6 +4,7 @@ let
   users = {
     root.hashedPasswordFile = config.age.secrets.password.path;
     "jacob" = {
+      uid = 1000;
       isNormalUser = true;
       hashedPasswordFile = config.age.secrets.password.path;
       extraGroups = [ "wheel" "networkmanager" ];

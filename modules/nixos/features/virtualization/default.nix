@@ -32,22 +32,23 @@ in {
     programs.virt-manager.enable = true;
 
     virtualisation = {
-       libvirtd = {
-         enable = true;
-         extraConfig = ''
-           user="${cfg.user}"
-         '';
+      libvirtd = {
+        enable = true;
+        extraConfig = ''
+          user="${cfg.user}"
+        '';
 
-         onBoot = "ignore";
-         onShutdown = "shutdown";
+        onBoot = "ignore";
+        onShutdown = "shutdown";
 
-         qemu = {
-           package = pkgs.qemu_kvm;
-           verbatimConfig = ''
-             namespaces = []
-             user = "+${builtins.toString config.users.users.${cfg.user}.uid}"
-           '';
-         };
+        qemu = {
+          package = pkgs.qemu_kvm;
+          ovmf.enable = true;
+          verbatimConfig = ''
+            namespaces = []
+            user = "+${builtins.toString config.users.users.${cfg.user}.uid}"
+          '';
+        };
       };
     };
 
