@@ -11,8 +11,16 @@ in {
   };
 
   config = mkIf cfg.enable {
-    services.supergfxd.enable = true;
-    services.asusd.enable = true;
-    services.asusd.enableUserService = true;
+    services.asusd = {
+      enable = true;
+      enableUserService = true;
+    };
+
+    services.supergfxd = {
+      enable = true;
+      settings = {
+        "gfx_vfio_enable" = true;
+      };
+    };
   };
 }
