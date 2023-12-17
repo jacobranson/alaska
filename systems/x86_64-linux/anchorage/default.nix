@@ -7,6 +7,9 @@
     ./user-configuration.nix
   ];
 
+  # linux kernel version to use
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   # ensure the system can boot
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
